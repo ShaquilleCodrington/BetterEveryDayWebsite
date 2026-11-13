@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+// 2026-11-13: the trigger is a paintbrush icon button (see the <summary> at the bottom).
+import { useEffect, useRef, useState } from "react";
+// 2026-11-13: Lucide paintbrush icon
+import { Paintbrush } from "lucide-react";
 
 // Each entry maps to one CSS custom property from index.css.
 // All of them are printed; only some have controls on screen.
@@ -138,6 +141,8 @@ function GradientStopRow({ label, hue, saturation, lightness, onHue, onLightness
 
 export default function GradientControls() {
   const [values, setValues] = useState(readInitialValues);
+  // 2026-11-13 (round 3): a handle to the <details> element, so we can close it from code
+  const detailsRef = useRef(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -147,50 +152,79 @@ export default function GradientControls() {
     console.log(`Gradient values:\n${formatValues(values)}`);
   }, [values]);
 
+  // 2026-11-13 (round 3): close the pop-out on a press anywhere outside it, or on Escape.
+  // Presses inside the panel are ignored here, so sliders and the colour wheel work normally.
+  // pointerdown covers mouse, touch and pen with one listener.
+  useEffect(() => {
+    function closeIfOutside(e) {
+      const el = detailsRef.current;
+      if (el && el.open && !el.contains(e.target)) el.open = false;
+    }
+    function closeOnEscape(e) {
+      const el = detailsRef.current;
+      if (e.key === "Escape" && el && el.open) el.open = false;
+    }
+    document.addEventListener("pointerdown", closeIfOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    // Cleanup: remove the listeners if this component ever unmounts
+    return () => {
+      document.removeEventListener("pointerdown", closeIfOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+
   function update(key, next) {
     setValues((prev) => ({ ...prev, [key]: next }));
   }
 
   return (
-    <details className="gradient-controls">
-      <summary>Gradient settings</summary>
+    // 2026-11-13 (round 3): ref added
+    <details className="gradient-controls" ref={detailsRef}>
+      {/* 2026-11-13: the trigger is just a paintbrush. title = hover tooltip,
+          aria-label = what screen readers announce. */}
+      <summary aria-label="Background settings" title="Background settings">
+        <Paintbrush size={20} aria-hidden="true" />
+      </summary>
 
-      <GradientStopRow
-        label="Colour 1"
-        hue={values.startH}
-        saturation={values.startS}
-        lightness={values.startL}
-        onHue={(h) => update("startH", h)}
-        onLightness={(l) => update("startL", l)}
-      />
-      <GradientStopRow
-        label="Colour 2"
-        hue={values.endH}
-        saturation={values.endS}
-        lightness={values.endL}
-        onHue={(h) => update("endH", h)}
-        onLightness={(l) => update("endL", l)}
-      />
+      {/* 2026-11-13: wrapper so the panel pops up above the button */}
+      <div className="gradient-controls__panel">
+        <GradientStopRow
+          label="Colour 1"
+          hue={values.startH}
+          saturation={values.startS}
+          lightness={values.startL}
+          onHue={(h) => update("startH", h)}
+          onLightness={(l) => update("startL", l)}
+        />
+        <GradientStopRow
+          label="Colour 2"
+          hue={values.endH}
+          saturation={values.endS}
+          lightness={values.endL}
+          onHue={(h) => update("endH", h)}
+          onLightness={(l) => update("endL", l)}
+        />
 
-      <div className="gradient-controls__row">
-        <label className="gradient-controls__label" htmlFor="gradient-angle">
-          Angle
-        </label>
-        <output className="gradient-controls__value" htmlFor="gradient-angle">
-          {Math.round(values.angle)}°
-        </output>
+        <div className="gradient-controls__row">
+          <label className="gradient-controls__label" htmlFor="gradient-angle">
+            Angle
+          </label>
+          <output className="gradient-controls__value" htmlFor="gradient-angle">
+            {Math.round(values.angle)}°
+          </output>
+        </div>
+        <input
+          id="gradient-angle"
+          type="range"
+          min="0"
+          max="360"
+          step="1"
+          value={values.angle}
+          onChange={(e) => update("angle", parseFloat(e.target.value))}
+        />
+
+        <pre className="gradient-controls__output">{formatValues(values)}</pre>
       </div>
-      <input
-        id="gradient-angle"
-        type="range"
-        min="0"
-        max="360"
-        step="1"
-        value={values.angle}
-        onChange={(e) => update("angle", parseFloat(e.target.value))}
-      />
-
-      <pre className="gradient-controls__output">{formatValues(values)}</pre>
     </details>
   );
 }

@@ -1,5 +1,8 @@
 import GradientBackground from "../components/GradientBackground.jsx";
 import GradientControls from "../components/GradientControls.jsx";
+// 2026-11-13: import the new Hero component
+import Hero from "../components/Hero.jsx";
+import Contact from "../components/Contact.jsx";
 
 export default function LandingPage() {
   return (
@@ -7,6 +10,9 @@ export default function LandingPage() {
       <GradientBackground />
       <main className="site-shell" aria-label="Better Every Day website">
         <div className="site-content">
+            {/* 2026-11-13: Hero is the first module on the page */}
+          <Hero />
+
           <section
             className="about-section"
             id="about"
@@ -34,9 +40,18 @@ export default function LandingPage() {
 
             <p>
               Come try it out at{" "}
-              <a href="https://bettereveryday.study">BetterEveryDay.study</a>.
+              {/* 2026-11-13: added title (hover tooltip) */}
+              <a
+                href="https://bettereveryday.study"
+                title="Open the BetterEveryDay app"
+              >
+                BetterEveryDay.study
+              </a>
+              .
             </p>
           </section>
+           {/* 2026-11-13: Contact is the last module on the page */}
+          <Contact />
         </div>
       </main>
       <GradientControls />

@@ -2,10 +2,23 @@
   /* Website colors */
   --bg-base: #f6f5f1;
   --text-base: #292823;
-  --text-heading: #1f1e1a;
+  --text-heading: #afafaf;
   --text-muted: #5d5b54;
   --text-link: #4967b5;
   --surface-panel: rgba(250, 247, 238, 0.94);
+
+  /* 2026-11-13: text colors for use on dark surfaces (hero) */
+  --text-on-dark: #f4f0ff;
+  --text-on-dark-muted: #cfc6e8;
+
+  /* 2026-11-13: Contact section colors (charcoal surface, white text, slightly lighter cards) */
+  --contact-bg: #1c1c1f;
+  --contact-text: #ffffff;
+  --contact-text-muted: #c9c9ce;
+  --contact-card-bg: #26262a;
+  --contact-card-bg-hover: #303036;
+  --contact-card-border: #3a3a40;
+  --contact-card-border-hover: #6b6b75;
 
   /* Gradient background: adjust these to retune the page background */
   --gradient-angle: 158deg;
@@ -36,6 +49,8 @@
   --font-size-h1: clamp(22px, 2.2vw, 30px);
   --font-size-h2: clamp(18px, 1.7vw, 22px);
   --font-size-h3: 16px;
+  /* Hero title scales with the screen */
+  --font-size-hero: clamp(32px, 6vw, 72px);
 
   /* Spacing */
   --space-xs: 4px;
@@ -46,6 +61,27 @@
 
   /* Shape */
   --radius-md: 12px;
+  /* Fully rounded ends for pill buttons */
+  --radius-pill: 999px;
+
+  /* Module borders. Width is shared; each kind of module gets its own shade */
+  /* 2026-11-13 (round 3): doubled from 3px to 6px */
+  --border-width: 6px;
+  /* 2026-11-13 (round 3): thinner border for the smaller things inside modules (contact cards) */
+  --border-width-inner: 2px;
+  --border-hero: #4a4756;
+  --border-module: #8a867c;
+  --border-contact: #55555c;
+
+  /* Module spacing. Gap between stacked modules, padding inside each one */
+  --module-gap: 8px;
+  --module-padding: var(--space-xl);
+
+  /* Hero height is roughly a third of the screen, with limits for tiny/huge screens */
+  --hero-height: clamp(240px, 33dvh, 480px);
+
+  /* Size of small round icon buttons (also a comfortable touch target) */
+  --icon-button-size: 44px;
 
   /* Page layout */
   --page-padding: clamp(16px, 2vw, 28px);

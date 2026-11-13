@@ -6,18 +6,23 @@
   width: 100%;
 }
 
+/* Modules stack in a column with a gap between them */
 .site-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--module-gap);
   width: 100%;
-  max-width: var(--content-max);
-  margin-inline: auto;
-  padding: var(--page-padding) var(--page-gutter);
+  /* A small space between the modules and the screen edges. It uses the same
+     variable as the gap between modules, so the spacing is even all the way around. */
+  padding: var(--module-gap);
 }
 
+/* About section is a full-width module with a border and inner padding */
 .about-section {
   width: 100%;
-  max-width: var(--about-copy-max);
-  padding: var(--section-padding-y) var(--space-xl);
+  padding: var(--module-padding);
   background: var(--surface-panel);
+  border: var(--border-width) solid var(--border-module);
   border-radius: var(--radius-md);
 }
 
@@ -27,6 +32,176 @@
 
 .about-section p + p {
   margin-top: var(--space-md);
+}
+
+/* HERO. Positioned container, so the canvas can anchor to it.
+   2026-11-13 (round 4): now a flex column (text on top, button underneath) and
+   min-height instead of height, so the hero grows if the content needs more room
+   and the button can never sit on top of the words. */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: var(--hero-height);
+  overflow: hidden; /* clips the canvas to the rounded corners */
+  background: #08051a;
+  border: var(--border-width) solid var(--border-hero);
+  border-radius: var(--radius-md);
+}
+
+/* The cityscape canvas fills the hero and sits behind everything.
+   It's absolutely positioned, so it doesn't take part in the flex layout. */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Text layer above the canvas.
+   2026-11-13 (round 4): flex: 1 makes it take all the space above the button
+   (it was height: 100%), and there's no bottom padding because the button's
+   margin provides the space below. */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--module-padding) var(--module-padding) 0;
+}
+
+.hero-content h1 {
+  color: var(--text-on-dark);
+  font-size: var(--font-size-hero);
+  line-height: 1.1;
+  /* 2026-11-13 (round 4): safety net so a very narrow phone wraps the title
+     instead of clipping it */
+  overflow-wrap: anywhere;
+}
+
+.hero-content p {
+  margin-top: var(--space-sm);
+  color: var(--text-on-dark-muted);
+}
+
+/* Pill button, bottom-left of the hero.
+   2026-11-13 (round 4): no longer position: absolute. It sits in the flow under
+   the text; align-self keeps it left and only as wide as its label, and the
+   margin gives the same spacing from the edges as before.
+   position: relative + z-index keeps it above the canvas. */
+.hero-button {
+  position: relative;
+  z-index: 2;
+  align-self: flex-start;
+  margin: var(--space-md) var(--module-padding) var(--module-padding);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--surface-panel);
+  color: var(--text-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+}
+
+/* CONTACT. Charcoal module with white text; every rule is scoped to
+   .contact-section / .contact-* so nothing leaks into the hero or about section */
+.contact-section {
+  width: 100%;
+  padding: var(--module-padding);
+  background: var(--contact-bg);
+  border: var(--border-width) solid var(--border-contact);
+  border-radius: var(--radius-md);
+}
+
+/* 2026-11-13 (round 4): size, weight and line height are back to your normal h2
+   style from index.css. Only the color is overridden, because the default h2
+   color is dark and would disappear on the charcoal background. */
+.contact-section h2 {
+  color: var(--contact-text);
+  margin-bottom: var(--space-lg);
+}
+
+.contact-intro {
+  max-width: var(--about-copy-max);
+  color: var(--contact-text-muted);
+}
+
+/* Two lists: email + phone on top, then the four profile links below */
+.contact-grid {
+  display: grid;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  list-style: none;
+}
+
+/* auto-fit: as many columns as fit, collapsing to one on a narrow phone */
+.contact-grid--direct {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.contact-grid--online {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+/* One card = one link. min-height keeps it a comfortable touch target */
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: 64px;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--contact-card-bg);
+  color: var(--contact-text);
+  text-decoration: none;
+  border: var(--border-width-inner) solid var(--contact-card-border);
+  border-radius: var(--radius-md);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.contact-card:hover {
+  background: var(--contact-card-bg-hover);
+  border-color: var(--contact-card-border-hover);
+}
+
+/* The default blue focus ring is hard to see on charcoal, so use white here */
+.contact-card:focus-visible {
+  outline-color: var(--contact-text);
+}
+
+.contact-card__icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: var(--border-width-inner) solid var(--contact-card-border-hover);
+  border-radius: var(--radius-pill);
+}
+
+/* min-width: 0 lets long text wrap inside the card instead of overflowing */
+.contact-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.contact-card__label {
+  color: var(--contact-text-muted);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contact-card__detail {
+  color: var(--contact-text);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 /* Gradient background: fixed, static, sits behind the page content */
@@ -42,25 +217,55 @@
   );
 }
 
-/* Gradient tuning panel: temporary, remove once the defaults are chosen */
+/* Gradient tuning control. The fixed wrapper is only as big as the paintbrush
+   button; the settings panel is absolutely positioned, so opening it doesn't
+   resize the wrapper */
 .gradient-controls {
   position: fixed;
   right: var(--page-padding);
   bottom: var(--page-padding);
   z-index: 2;
+}
+
+/* The paintbrush button (a <summary>). list-style + the webkit rule remove the
+   browser's default disclosure triangle */
+.gradient-controls summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-button-size);
+  height: var(--icon-button-size);
+  background: var(--surface-panel);
+  color: var(--text-heading);
+  border: var(--border-width) solid var(--border-module);
+  border-radius: var(--radius-pill);
+  list-style: none;
+  cursor: pointer;
+}
+
+.gradient-controls summary::-webkit-details-marker {
+  display: none;
+}
+
+.gradient-controls summary:hover {
+  background: #fff;
+}
+
+/* The settings pop-out. bottom: 100% puts it directly above the button;
+   max-height keeps it inside the screen and scrolls if it's too tall */
+.gradient-controls__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--space-sm));
   width: min(340px, calc(100vw - 2 * var(--page-padding)));
-  max-height: calc(100dvh - 2 * var(--page-padding));
+  max-height: calc(
+    100dvh - 2 * var(--page-padding) - var(--icon-button-size) - var(--space-sm)
+  );
   overflow-y: auto;
   padding: var(--space-md);
   background: var(--surface-panel);
+  border: var(--border-width) solid var(--border-module);
   border-radius: var(--radius-md);
-}
-
-.gradient-controls summary {
-  color: var(--text-heading);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .gradient-controls input[type="range"] {

@@ -1,0 +1,131 @@
+:root {
+  /* Website colors */
+  --bg-base: #f6f5f1;
+  --text-base: #292823;
+  --text-heading: #1f1e1a;
+  --text-muted: #5d5b54;
+  --text-link: #4967b5;
+  --surface-panel: rgba(250, 247, 238, 0.94);
+
+  /* Gradient background: adjust these to retune the page background */
+  --gradient-angle: 158deg;
+  --gradient-start-h: 25;
+  --gradient-start-s: 20%;
+  --gradient-start-l: 11%;
+  --gradient-end-h: 45;
+  --gradient-end-s: 40%;
+  --gradient-end-l: 82%;
+  --gradient-start-stop: 0%;
+  --gradient-end-stop: 100%;
+
+  /* Gradient background: built from the settings above, no need to edit */
+  --gradient-start: hsl(
+    var(--gradient-start-h) var(--gradient-start-s) var(--gradient-start-l)
+  );
+  --gradient-end: hsl(
+    var(--gradient-end-h) var(--gradient-end-s) var(--gradient-end-l)
+  );
+
+  /* Typography */
+  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-size-base: 14px;
+  --font-size-sm: 12px;
+  --font-size-xs: 11px;
+  --font-size-label: 9px;
+  --font-size-h1: clamp(22px, 2.2vw, 30px);
+  --font-size-h2: clamp(18px, 1.7vw, 22px);
+  --font-size-h3: 16px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 14px;
+  --space-lg: 20px;
+  --space-xl: 28px;
+
+  /* Shape */
+  --radius-md: 12px;
+
+  /* Page layout */
+  --page-padding: clamp(16px, 2vw, 28px);
+  --page-gutter: clamp(16px, 4vw, 48px);
+  --content-max: 1120px;
+  --about-copy-max: 720px;
+  --section-padding-y: clamp(28px, 4vw, 56px);
+
+  /* Interaction */
+  --focus-ring: #4967b5;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg-base);
+  color: var(--text-base);
+  font-family: var(--font-base);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1 {
+  color: var(--text-heading);
+  font-size: var(--font-size-h1);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  color: var(--text-heading);
+  font-size: var(--font-size-h2);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h3 {
+  color: var(--text-heading);
+  font-size: var(--font-size-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+p {
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--text-link);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}

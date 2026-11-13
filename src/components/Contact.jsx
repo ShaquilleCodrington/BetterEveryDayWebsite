@@ -80,10 +80,12 @@ export default function Contact() {
       <h2 id="contact-heading">Contact</h2>
 
       <p className="contact-intro">
-        To discuss collaborating on a project or hiring, reach out by email or
-        phone. You can also check out my LinkedIn, and follow BetterEveryDay on
-        Instagram and TikTok.
+        To discuss collaborating on a project or hiring, reach out by email or phone. 
       </p>
+        <p  style={{ textAlign: 'right', color: 'var(--text-on-dark-muted)'}}>
+        You can also check out my LinkedIn, and follow BetterEveryDay on Instagram and TikTok.
+        </p>
+
 
       <ul className="contact-grid contact-grid--direct">
         {DIRECT.map((item) => (

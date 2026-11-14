@@ -1,13 +1,13 @@
-// 2026-11-13: NEW FILE - condensed cityscape for the landing page hero.
-// Removed from the app version: timer-page logic, localStorage settings,
-// tint system, mood-change transitions, and storage/focus listeners.
-// The landing page has no controls for any of those, so they were dead weight.
+// 2026-11-14: Self-contained cityscape for the landing page. It no longer runs on
+// load. It defines window.startCityscape(canvas), which Hero.jsx calls with its
+// canvas. The returned function stops the animation (called when Hero unmounts).
+// Drawing code is unchanged; only the wrapper, sizing and teardown differ.
 
-(function () {
-  const canvas = document.getElementById('city-canvas');
-  if (!canvas) return;
+window.startCityscape = function (canvas) {
   const ctx = canvas.getContext('2d', { alpha: false });
-  let W, H;
+  let W = 0, H = 0;
+  let rafId = null;
+  let stopped = false;
 
   // ── Settings (change these two to retune) ─────────────────────────────
   const MOOD         = 'default'; // 'default' | 'Focused' | 'Planning' | 'Recharge'
@@ -65,6 +65,10 @@
   const rng  = (a, b, r) => a + r() * (b - a);
   const irng = (a, b, r) => Math.floor(rng(a, b + 1, r));
 
+  // ── Moon constants (declared before buildGradients uses them) ─────────
+  const MOON_X = 0.78, MOON_Y = 0.12, MOON_R = 42;
+  let moonCanvas = null;
+
   // ── Cached gradients (depend on canvas size, rebuilt in resize) ───────
   let skyGradient, bloomGradient, haloGradient, roadAsphalt, roadRefl;
 
@@ -111,9 +115,6 @@
   }
 
   // ── Moon (drawn once to an offscreen canvas) ──────────────────────────
-  const MOON_X = 0.78, MOON_Y = 0.12, MOON_R = 42;
-  let moonCanvas = null;
-
   function buildMoonCanvas() {
     const mr = MOON_R, size = mr * 3;
     const oc = document.createElement('canvas');
@@ -455,29 +456,40 @@
 
   function resize() {
     const box = canvas.parentElement;
-    W = canvas.width  = box.clientWidth;
-    H = canvas.height = box.clientHeight;
+    const w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return; // hero has no size yet; the observer will call again
+    W = canvas.width  = w;
+    H = canvas.height = h;
     buildGradients();
     buildBuildingLayers();
     buildClouds();
     buildStars();
   }
 
-  window.addEventListener('resize', () => {
+  // Watches the hero itself, so late layout changes (fonts, CSS) re-size the canvas
+  const resizeObserver = new ResizeObserver(() => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resize, 120);
   });
+  resizeObserver.observe(canvas.parentElement);
 
   // ── Main loop ─────────────────────────────────────────────────────────
   let scrollX = 0, t = 0, lastNow = performance.now();
   const MAX_DT = 1 / 20; // cap so a long pause doesn't cause a giant jump
 
   // Reset the clock when the tab comes back so dt doesn't spike
-  document.addEventListener('visibilitychange', () => {
+  function onVisibility() {
     if (!document.hidden) lastNow = performance.now();
-  });
+  }
+  document.addEventListener('visibilitychange', onVisibility);
 
   function draw(now) {
+    if (stopped) return;
+    rafId = requestAnimationFrame(draw);
+
+    // Nothing built yet (hero has no size), so skip this frame
+    if (!builtLayers.length) { lastNow = now; return; }
+
     const dt = Math.min((now - lastNow) / 1000, MAX_DT);
     lastNow = now;
     t += dt;
@@ -501,10 +513,17 @@
 
     drawRoad(scrollX);
     drawBuildingLayer(builtLayers[2], scrollX);
-
-    requestAnimationFrame(draw);
   }
 
   resize();
-  requestAnimationFrame(draw);
-})();
+  rafId = requestAnimationFrame(draw);
+
+  // Stop function, returned to Hero.jsx
+  return function stop() {
+    stopped = true;
+    cancelAnimationFrame(rafId);
+    clearTimeout(resizeTimer);
+    resizeObserver.disconnect();
+    document.removeEventListener('visibilitychange', onVisibility);
+  };
+};

@@ -1,22 +1,54 @@
 // 2026-11-13: NEW FILE - Hero section for the landing page
-import { useEffect } from "react";
+// 2026-11-14: still loads /cityscapeWebsite.js from public/, but the script now only
+// defines window.startCityscape. Hero starts it on its own canvas and stops it on
+// unmount. The script tag is added once and left in place, so StrictMode's
+// mount/unmount/mount in dev can't inject it twice or lose it.
+import { useEffect, useRef } from "react";
+
+const SCRIPT_ID = "cityscapeWebsite-script";
+const SCRIPT_SRC = `${import.meta.env.BASE_URL}cityscapeWebsite.js`;
 
 export default function Hero() {
-  // Load the cityscape script once. It looks for #city-canvas,
-  // so the canvas has to be in the DOM first, which is why this runs in an effect.
-  // 2026-11-14: back to "/cityscape.js". The app only serves files from its own
-  // public/ folder, so cityscape.js has to be copied there.
+  const canvasRef = useRef(null);
+
   useEffect(() => {
-    if (document.getElementById("cityscape-script")) return;
-    const script = document.createElement("script");
-    script.id = "cityscape-script";
-    script.src = "/cityscape.js";
-    document.body.appendChild(script);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let stop = null;
+    let cancelled = false;
+
+    const start = () => {
+      if (cancelled || stop) return;
+      stop = window.startCityscape(canvas);
+    };
+
+    let script = document.getElementById(SCRIPT_ID);
+
+    if (window.startCityscape) {
+      // Script already loaded (e.g. second StrictMode run, or navigating back)
+      start();
+    } else {
+      if (!script) {
+        script = document.createElement("script");
+        script.id = SCRIPT_ID;
+        script.src = SCRIPT_SRC;
+        script.async = true;
+        document.body.appendChild(script);
+      }
+      script.addEventListener("load", start);
+    }
+
+    return () => {
+      cancelled = true;
+      if (script) script.removeEventListener("load", start);
+      if (stop) stop();
+    };
   }, []);
 
   return (
     <section className="hero" aria-labelledby="hero-heading">
-      <canvas id="city-canvas" className="hero-canvas" aria-hidden="true" />
+      <canvas ref={canvasRef} className="hero-canvas" aria-hidden="true" />
 
       <div className="hero-content">
         {/* 2026-11-14: website-h1 / website-h3 / website-p text classes */}

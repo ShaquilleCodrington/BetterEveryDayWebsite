@@ -1,5 +1,8 @@
 // 2026-11-13: NEW FILE - Contact section, the last module on the landing page
-import { Github, Instagram, Linkedin, Mail, Music2, Phone } from "lucide-react";
+// 2026-11-14: Github, Instagram and Linkedin are no longer exported by
+// lucide-react, so the import and the three icon entries below use icons
+// that still exist (Code, Camera, Briefcase).
+import { Briefcase, Camera, Code, Mail, Music2, Phone } from "lucide-react";
 
 // Direct ways to reach us. mailto: and tel: open the visitor's mail / phone app.
 const DIRECT = [
@@ -25,21 +28,21 @@ const ONLINE = [
     label: "LinkedIn",
     detail: "Shaquille Codrington",
     href: "https://www.linkedin.com/in/shaquillecodrington/",
-    icon: Linkedin,
+    icon: Briefcase, // 2026-11-14: was Linkedin
     tooltip: "Open LinkedIn profile",
   },
   {
     label: "GitHub",
     detail: "BetterEveryDay",
     href: "https://github.com/ShaquilleCodrington/BetterEveryDay",
-    icon: Github,
+    icon: Code, // 2026-11-14: was Github
     tooltip: "Open GitHub repository",
   },
   {
     label: "Instagram",
     detail: "BetterEveryDay",
     href: "https://www.instagram.com/betterreverrydayy",
-    icon: Instagram,
+    icon: Camera, // 2026-11-14: was Instagram
     tooltip: "Open Instagram",
   },
   {
@@ -77,12 +80,13 @@ function ContactCard({ item, external }) {
 export default function Contact() {
   return (
     <section className="contact-section" id="contact" aria-labelledby="contact-heading">
-      <h2 id="contact-heading">Contact</h2>
+      {/* 2026-11-14: website-h2 / website-p text classes */}
+      <h2 id="contact-heading" className="website-h2">Contact</h2>
 
-      <p className="contact-intro">
+      <p className="contact-intro website-p">
         To discuss collaborating on a project or hiring, reach out by email or phone. 
       </p>
-        <p  style={{ textAlign: 'right', color: 'var(--text-on-dark-muted)'}}>
+        <p className="website-p" style={{ textAlign: 'right', color: 'var(--text-on-dark-muted)'}}>
         You can also check out my LinkedIn, and follow BetterEveryDay on Instagram and TikTok.
         </p>
 

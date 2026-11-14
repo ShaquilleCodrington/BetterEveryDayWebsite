@@ -1,25 +1,12 @@
+/* 2026-11-14: Everything the website does to plain elements (html, body, #root,
+   h1/h2/h3, p, a, the * reset) used to be global, so it also hit the app and
+   the app's rules also hit the website. Now the website's rules live under
+   .website, and elements get website-h1 / website-h2 / website-h3 / website-p /
+   website-a classes. No numbers were changed. */
+
+/* 2026-11-14: Gradient settings stay on :root (unchanged) so the tuning panel
+   keeps working. */
 :root {
-  /* Website colors */
-  --bg-base: #f6f5f1;
-  --text-base: #292823;
-  --text-heading: #afafaf;
-  --text-muted: #5d5b54;
-  --text-link: #4967b5;
-  --surface-panel: rgba(250, 247, 238, 0.94);
-
-  /* 2026-11-13: text colors for use on dark surfaces (hero) */
-  --text-on-dark: #f4f0ff;
-  --text-on-dark-muted: #cfc6e8;
-
-  /* 2026-11-13: Contact section colors (charcoal surface, white text, slightly lighter cards) */
-  --contact-bg: #1c1c1f;
-  --contact-text: #ffffff;
-  --contact-text-muted: #c9c9ce;
-  --contact-card-bg: #26262a;
-  --contact-card-bg-hover: #303036;
-  --contact-card-border: #3a3a40;
-  --contact-card-border-hover: #6b6b75;
-
   /* Gradient background: adjust these to retune the page background */
   --gradient-angle: 158deg;
   --gradient-start-h: 25;
@@ -38,6 +25,37 @@
   --gradient-end: hsl(
     var(--gradient-end-h) var(--gradient-end-s) var(--gradient-end-l)
   );
+}
+
+/* 2026-11-14: Website wrapper. Tokens, base styles and scrolling live here.
+   Defining the tokens on .website (not :root) means the app's variables with
+   the same names cannot override them. position: fixed + overflow-y: auto
+   makes this its own scroll container, so the page scrolls no matter what the
+   app does to html, body or #root. */
+.website {
+  /* Website colors */
+  --bg-base: #f6f5f1;
+  --text-base: #292823;
+  --text-heading: #afafaf;
+  --text-muted: #5d5b54;
+  --text-link: #4967b5;
+  --surface-panel: rgba(250, 247, 238, 0.94);
+
+  /* 2026-11-14: charcoal gray for the About section text */
+  --text-about: #3d3d42;
+
+  /* 2026-11-13: text colors for use on dark surfaces (hero) */
+  --text-on-dark: #f4f0ff;
+  --text-on-dark-muted: #cfc6e8;
+
+  /* 2026-11-13: Contact section colors (charcoal surface, white text, slightly lighter cards) */
+  --contact-bg: #1c1c1f;
+  --contact-text: #ffffff;
+  --contact-text-muted: #c9c9ce;
+  --contact-card-bg: #26262a;
+  --contact-card-bg-hover: #303036;
+  --contact-card-border: #3a3a40;
+  --contact-card-border-hover: #6b6b75;
 
   /* Typography */
   --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -92,26 +110,14 @@
 
   /* Interaction */
   --focus-ring: #4967b5;
-}
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html,
-body,
-#root {
+  /* 2026-11-14: base page styles, moved here from html/body/#root so they
+     only apply to the website */
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
   min-width: 320px;
-  min-height: 100%;
-}
-
-body {
-  min-height: 100vh;
-  min-height: 100dvh;
   background: var(--bg-base);
   color: var(--text-base);
   font-family: var(--font-base);
@@ -123,45 +129,62 @@ body {
   text-size-adjust: 100%;
 }
 
-button,
-input,
-select,
-textarea {
+/* 2026-11-14: reset, now only inside the website */
+.website *,
+.website *::before,
+.website *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.website button,
+.website input,
+.website select,
+.website textarea {
   font: inherit;
 }
 
-h1 {
+/* 2026-11-14: website text styles. Use these classes instead of styling the
+   bare h1/h2/h3/p/a elements. */
+.website-h1 {
   color: var(--text-heading);
   font-size: var(--font-size-h1);
   font-weight: 700;
   line-height: 1.2;
 }
 
-h2 {
+.website-h2 {
   color: var(--text-heading);
   font-size: var(--font-size-h2);
   font-weight: 600;
   line-height: 1.3;
 }
 
-h3 {
+.website-h3 {
   color: var(--text-heading);
   font-size: var(--font-size-h3);
   font-weight: 600;
   line-height: 1.4;
 }
 
-p {
+.website-p {
   color: var(--text-muted);
   font-size: var(--font-size-base);
   line-height: 1.6;
 }
 
-a {
+.website-a {
   color: var(--text-link);
 }
 
-:focus-visible {
+/* 2026-11-14: About section text is charcoal gray */
+.about-section .website-h1,
+.about-section .website-p {
+  color: var(--text-about);
+}
+
+.website :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }

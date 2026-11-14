@@ -36,17 +36,17 @@
   /* Website colors */
   --bg-base: #f6f5f1;
   --text-base: #292823;
-  --text-heading: #afafaf;
-  --text-muted: #5d5b54;
-  --text-link: #4967b5;
+  --text-heading: #757171;
+  --text-muted: #41403a;
+  --text-link: #2a4ca4;
   --surface-panel: rgba(250, 247, 238, 0.94);
 
   /* 2026-11-14: charcoal gray for the About section text */
   --text-about: #3d3d42;
 
   /* 2026-11-13: text colors for use on dark surfaces (hero) */
-  --text-on-dark: #f4f0ff;
-  --text-on-dark-muted: #cfc6e8;
+  --text-on-dark: #cec6e4;
+  --text-on-dark-muted: #c3bbda;
 
   /* 2026-11-13: Contact section colors (charcoal surface, white text, slightly lighter cards) */
   --contact-bg: #1c1c1f;

@@ -340,3 +340,179 @@
   white-space: pre-wrap;
   user-select: all;
 }
+
+/* ── Website navbar + search (2026-11-14) ───────────────────────────── */
+
+.website {
+  --website-navbar-height: 56px;
+}
+
+/* Room at the top of the page so the first module isn't under the fixed bar */
+.website .site-content {
+  padding-top: calc(var(--module-gap) * 2 + var(--website-navbar-height));
+}
+
+.website-navbar {
+  position: fixed;
+  top: var(--module-gap);
+  left: var(--module-gap);
+  right: var(--module-gap);
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 520px) 1fr;
+  align-items: center;
+  column-gap: var(--space-md);
+  height: var(--website-navbar-height);
+  padding: 0 var(--space-lg);
+  background: var(--surface-panel);
+  border: var(--border-width) solid var(--border-module);
+  border-radius: var(--radius-md);
+  transition: transform 0.25s ease;
+}
+
+/* Slides up out of view (past its own gap from the top) */
+.website-navbar-hidden {
+  transform: translateY(calc(-100% - var(--module-gap)));
+}
+
+.website-navbar-logo {
+  justify-self: start;
+  color: var(--text-heading);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* SEARCH. The wrapper is the anchor for the dropdown panel. */
+.website-search {
+  position: relative;
+  min-width: 0;
+}
+
+.website-search-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(31, 30, 26, 0.06);
+  color: var(--text-muted);
+  border-radius: var(--radius-pill);
+}
+
+/* The input has no outline of its own; the whole field shows the focus ring */
+.website-search-field:focus-within {
+  outline: 2px solid var(--text-heading);
+  outline-offset: 2px;
+}
+
+.website-search-icon {
+  flex: none;
+}
+
+.website-search-input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-xs) 0;
+  background: transparent;
+  color: var(--text-heading);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  border: 0;
+  outline: none;
+}
+
+.website-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.website-search-shortcut {
+  flex: none;
+  padding: 0 var(--space-sm);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  border: var(--border-width-inner) solid var(--border-module);
+  border-radius: var(--radius-sm, 6px);
+}
+
+/* Dropdown panel directly under the field */
+.website-search-overlay {
+  position: absolute;
+  top: calc(100% + var(--space-sm));
+  left: 0;
+  right: 0;
+  max-height: min(60vh, 360px);
+  overflow-y: auto;
+  padding: var(--space-sm);
+  background: var(--surface-panel);
+  border: var(--border-width) solid var(--border-module);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.website-search-heading {
+  margin: 0;
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.website-search-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.website-search-result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+}
+
+.website-search-result[aria-selected="true"] {
+  background: rgba(31, 30, 26, 0.08);
+}
+
+.website-search-result-name {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+.website-search-result-description {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.website-search-empty {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Phones: logo and search share one row, search takes the remaining width */
+@media (max-width: 600px) {
+  .website-navbar {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 0 var(--space-md);
+  }
+
+  .website-navbar-logo {
+    font-size: var(--font-size-sm);
+  }
+
+  .website-search-shortcut {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .website-navbar {
+    transition: none;
+  }
+}

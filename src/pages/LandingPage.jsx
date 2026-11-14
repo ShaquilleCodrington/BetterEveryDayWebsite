@@ -3,6 +3,8 @@ import GradientControls from "../components/GradientControls.jsx";
 // 2026-11-13: import the new Hero component
 import Hero from "../components/Hero.jsx";
 import Contact from "../components/Contact.jsx";
+// 2026-11-14: website navbar (logo + search)
+import Navbar from "../components/Navbar.jsx";
 
 export default function LandingPage() {
   return (
@@ -10,6 +12,7 @@ export default function LandingPage() {
     // is the scrolling container for the page.
     <div className="website">
       <GradientBackground />
+      <Navbar />
       <main className="site-shell" aria-label="Better Every Day website">
         <div className="site-content">
             {/* 2026-11-13: Hero is the first module on the page */}

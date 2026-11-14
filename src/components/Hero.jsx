@@ -26,7 +26,7 @@ export default function Hero() {
       {/* 2026-11-13: added title (hover tooltip) */}
       <a
         className="hero-button"
-        href="https://bettereveryday.study"
+        href="https://bettereveryday.study/#/congruence"
         title="Open the BetterEveryDay app"
       >
 

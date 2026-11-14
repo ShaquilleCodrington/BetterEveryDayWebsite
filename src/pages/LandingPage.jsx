@@ -46,7 +46,7 @@ export default function LandingPage() {
               {/* 2026-11-13: added title (hover tooltip) */}
               <a
                 className="website-a"
-                href="https://bettereveryday.study"
+                href="https://bettereveryday.study/#/congruence"
                 title="Open the BetterEveryDay app"
               >
                 BetterEveryDay.study
